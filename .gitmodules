@@ -1,3 +1,0 @@
-[submodule "dotnet-build"]
-	path = dotnet-build
-	url = https://github.com/engagedtechnologies/dotnet-build
