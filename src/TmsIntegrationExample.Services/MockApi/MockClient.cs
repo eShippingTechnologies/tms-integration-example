@@ -5,13 +5,12 @@
 //     Implementation of IMockClient
 // </summary>
 
-namespace TmsIntegrationExample.Services.EpicorApi
+namespace TmsIntegrationExample.Services.MockApi
 {
     using System.Collections.Generic;
     using System.IO;
     using System.Text.Json;
     using System.Threading.Tasks;
-    using TmsIntegrationExample.Services.MockApi;
     using TmsIntegrationExample.Services.MockApi.Model;
 
     public class MockClient : IMockClient

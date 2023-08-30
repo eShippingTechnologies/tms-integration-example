@@ -20,5 +20,6 @@ namespace TmsIntegrationExample.Services.TmsGatewayApi.Configuration
         public string ClientId { get; set; }
         public string RedirectUri { get; set; }
         public string AccountNumber { get; set; }
+        public object Scope { get; internal set; }
     }
 }

@@ -10,7 +10,6 @@ namespace TmsIntegrationExample.Services.TmsGatewayApi.Model
     /// <summary>
     /// An enumeration of possible accessorial codes for customer requested accessorials. If anything other than a customer request item is put in this enumeration Joy will come after you with fire and fury.
     /// </summary>
-    // THE ORDER MATTERS! These enums are relating to ints that are stored in our DB so how these map back from the DB to enums has been defined and reordering is not allowed.If you need to add a new state do it at the end please :)
     public enum AccessorialCode
     {
         /// <summary>

@@ -8,9 +8,8 @@
 namespace TmsIntegrationExample.Example
 {
     using Microsoft.Extensions.Options;
-    using System.IO;
-    using System.Reflection;
     using System.Threading.Tasks;
+    using TmsIntegrationExample.Example.Extensions;
     using TmsIntegrationExample.Example.Transformers;
     using TmsIntegrationExample.Services.MockApi;
     using TmsIntegrationExample.Services.TmsGatewayApi;
@@ -34,30 +33,26 @@ namespace TmsIntegrationExample.Example
 
         public async Task<int> ProcessAsync()
         {
-            var ordersResult = await mockClient.GetOrdersAsync(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"MockApi\Orders.json"));
-
-            var numberProcessed = 0;
+            var ordersResult = await this.mockClient.GetOrdersAsync(@"MockApi\Orders.json".PathFromExecutingAssemblyLocation());
 
             if (ordersResult != null)
             {
                 foreach (var order in ordersResult)
                 {
-                    var sourceLocation = await mockClient.GetAddressByAddressIdAsync(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"MockApi\SourceLocation.json"));
+                    var sourceLocation = await this.mockClient.GetAddressByAddressIdAsync(@"MockApi\SourceLocation.json".PathFromExecutingAssemblyLocation());
                     var shipTo = new Services.MockApi.Model.Address();
                     if (order.ShipToId != null)
                     {
-                        shipTo = await mockClient.GetAddressByAddressIdAsync(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"MockApi\ShipTo.json"));
+                        shipTo = await this.mockClient.GetAddressByAddressIdAsync(@"MockApi\ShipTo.json".PathFromExecutingAssemblyLocation());
                     }
 
                     var shipmentPost = new MockOrderToShipment().Transform(order, shipTo, sourceLocation, this.tmsGatewayConfiguration.AccountNumber);
 
-                    await tmsGatewayClient.PostShipmentAsync(shipmentPost);
-
-                    numberProcessed++;
+                    await this.tmsGatewayClient.PostShipmentAsync(shipmentPost);
                 }
             }
 
-            return numberProcessed;
+            return ordersResult.Count;
         }
     }
 }

@@ -29,7 +29,7 @@ namespace TmsIntegrationExample.Example
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation(
+            this._logger.LogInformation(
                 $"{nameof(TmsIntegrationExampleJob)} is running.");
 
             await ExecuteJobAsync();
@@ -37,10 +37,10 @@ namespace TmsIntegrationExample.Example
 
         private async Task ExecuteJobAsync()
         {
-            _logger.LogInformation(
+            this._logger.LogInformation(
                 $"{nameof(TmsIntegrationExampleJob)} is working.");
 
-            using IServiceScope scope = _serviceProvider.CreateScope();
+            using IServiceScope scope = this._serviceProvider.CreateScope();
             ITmsIntegrationExampleProcessor tmsIntegrationExampleProcessor = scope.ServiceProvider.GetRequiredService<ITmsIntegrationExampleProcessor>();
 
             Console.WriteLine($"Starting Job: {nameof(TmsIntegrationExampleJob)}");
@@ -52,7 +52,7 @@ namespace TmsIntegrationExample.Example
 
         public override async Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation(
+            this._logger.LogInformation(
                 $"{nameof(TmsIntegrationExampleJob)} is stopping.");
 
             await base.StopAsync(cancellationToken);

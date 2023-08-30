@@ -11,8 +11,10 @@ namespace TmsIntegrationExample.Example
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Hosting;
     using TmsIntegrationExample.Services.Extensions;
+    using TmsIntegrationExample.Services.MockApi;
 
     public class Startup
     {
@@ -26,15 +28,12 @@ namespace TmsIntegrationExample.Example
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IConfiguration>(provider => Configuration);
-
             services.AddHostedService<TmsIntegrationExampleJob>();
             services.AddScoped<ITmsIntegrationExampleProcessor, TmsIntegrationExampleProcessor>();
-            
             services.AddJsonSerializerOptions();
-
             services.AddHttpClient();
             services.AddTmsGatewayClient(this.Configuration.GetSection("Endpoints:TmsGatewayAPI"));
-            services.AddMockClient(this.Configuration.GetSection("Endpoints:EpicorAPI"));
+            services.TryAddScoped<IMockClient, MockClient>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

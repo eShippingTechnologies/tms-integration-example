@@ -10,7 +10,6 @@ namespace TmsIntegrationExample.Services.TmsGatewayApi
     using IdentityModel;
     using IdentityModel.Client;
     using Microsoft.Extensions.Options;
-    using Newtonsoft.Json;
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Net.Http.Json;
@@ -26,7 +25,7 @@ namespace TmsIntegrationExample.Services.TmsGatewayApi
         private readonly JsonSerializerOptions jsonSerializerOptions;
         private readonly HttpClient httpClient;
         private readonly TmsGatewayConfiguration tmsGatewayConfiguration;
-        private TokenResponse accessToken;
+        private TokenResponse tokenResponse;
 
         public TmsGatewayClient(
             HttpClient httpClient,
@@ -41,16 +40,16 @@ namespace TmsIntegrationExample.Services.TmsGatewayApi
 
         public async Task<Shipment> PostShipmentAsync(ShipmentPost shipment)
         {
-            accessToken = await GetAccessTokenAsync();
-            httpClient.DefaultRequestHeaders.Clear();
-            httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken.AccessToken);
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            this.tokenResponse = await this.GetAccessTokenAsync();
+            this.httpClient.DefaultRequestHeaders.Clear();
+            this.httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + this.tokenResponse.AccessToken);
+            this.httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var jsonContent = JsonConvert.SerializeObject(shipment);
+            var jsonContent = JsonSerializer.Serialize(shipment);
             var contentString = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await httpClient.PostAsync($"{tmsGatewayConfiguration.ShipmentsSubPath}", contentString);
+            HttpResponseMessage response = await this.httpClient.PostAsync($"{this.tmsGatewayConfiguration.ShipmentsSubPath}", contentString);
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<Shipment>(jsonSerializerOptions);
+            return await response.Content.ReadFromJsonAsync<Shipment>(this.jsonSerializerOptions);
         }
 
         public async Task<TokenResponse> GetAccessTokenAsync()
@@ -73,7 +72,7 @@ namespace TmsIntegrationExample.Services.TmsGatewayApi
                 responseType: "code",
                 clientId: this.tmsGatewayConfiguration.ClientId,
                 redirectUri: this.tmsGatewayConfiguration.RedirectUri,
-                scope: "openid profile engTech",
+                scope: $"openid {this.tmsGatewayConfiguration.Scope}",
                 state: state,
                 codeChallenge: challenge,
                 codeChallengeMethod: OidcConstants.CodeChallengeMethods.Sha256);
