@@ -68,7 +68,8 @@ namespace TmsIntegrationExample.Services.TmsGatewayApi
             var challenge = verifier.ToCodeChallenge();
 
             // Create a relative url for requesting the authorization code
-            var url = new RequestUrl(this.tmsGatewayConfiguration.AuthorizeSubPath).CreateAuthorizeUrl(
+            // this endpoint is available on https://login.tms.engagedtechnologies.com/.well-known/openid-configuration
+            var url = new RequestUrl("connect/authorize").CreateAuthorizeUrl(
                 responseType: "code",
                 clientId: this.tmsGatewayConfiguration.ClientId,
                 redirectUri: this.tmsGatewayConfiguration.RedirectUri,
@@ -82,7 +83,8 @@ namespace TmsIntegrationExample.Services.TmsGatewayApi
             var code = System.Web.HttpUtility.ParseQueryString(authorizeResponse.Headers.Location.Query)["code"];
 
             // Request the access token
-            var tokenResponse = await new TokenClient(loginHttpClient, new TokenClientOptions { Address = this.tmsGatewayConfiguration.TokenSubPath, ClientId = this.tmsGatewayConfiguration.ClientId })
+            // this endpoint is available on https://login.tms.engagedtechnologies.com/.well-known/openid-configuration
+            var tokenResponse = await new TokenClient(loginHttpClient, new TokenClientOptions { Address = "connect/token", ClientId = this.tmsGatewayConfiguration.ClientId })
                 .RequestAuthorizationCodeTokenAsync(
                     code,
                     this.tmsGatewayConfiguration.RedirectUri,

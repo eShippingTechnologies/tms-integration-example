@@ -9,19 +9,10 @@ namespace TmsIntegrationExample.Services.TmsGatewayApi.Model
 {
     public class HazmatProperties
     {
-        /// <summary>
-        /// The hazmat UN number.
-        /// </summary>
         public string UnNumber { get; set; }
 
-        /// <summary>
-        /// The hazmat package group.
-        /// </summary>
         public string PackageGroup { get; set; }
 
-        /// <summary>
-        /// The hazmat class.
-        /// </summary>
         public string Class { get; set; }
     }
 }

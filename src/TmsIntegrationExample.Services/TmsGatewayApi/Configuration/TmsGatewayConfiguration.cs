@@ -12,8 +12,6 @@ namespace TmsIntegrationExample.Services.TmsGatewayApi.Configuration
         public System.Uri BaseAddress { get; set; }
         public System.Uri LoginBaseAddress { get; set; }
         public string LoginSubPath { get; set; }
-        public string AuthorizeSubPath { get; set; }
-        public string TokenSubPath { get; set; }
         public string ShipmentsSubPath { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
