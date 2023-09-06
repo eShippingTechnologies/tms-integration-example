@@ -33,6 +33,7 @@ namespace TmsIntegrationExample.Example
             services.AddJsonSerializerOptions();
             services.AddHttpClient();
             services.AddTmsGatewayClient(this.Configuration.GetSection("Endpoints:TmsGatewayAPI"));
+            services.AddAccessTokenClient(this.Configuration.GetSection("Endpoints:AccessTokenAPI"));
             services.TryAddScoped<IMockClient, MockClient>();
         }
 

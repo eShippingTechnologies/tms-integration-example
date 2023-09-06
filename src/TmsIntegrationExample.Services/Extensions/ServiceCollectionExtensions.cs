@@ -7,6 +7,7 @@
 
 namespace TmsIntegrationExample.Services.Extensions
 {
+    using System.Net.Http;
     using System.Text.Json;
     using System.Text.Json.Serialization;
     using Microsoft.Extensions.Configuration;
@@ -14,6 +15,8 @@ namespace TmsIntegrationExample.Services.Extensions
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using TmsIntegrationExample.Services.TmsGatewayApi;
     using TmsIntegrationExample.Services.TmsGatewayApi.Configuration;
+    using TmsIntegrationExample.Services.AccessToken.Configuration;
+    using TmsIntegrationExample.Services.AccessToken;
 
     public static class ServiceCollectionExtensions
     {
@@ -21,6 +24,33 @@ namespace TmsIntegrationExample.Services.Extensions
         {
             services.Configure<TmsGatewayConfiguration>(config);
             services.TryAddScoped<ITmsGatewayClient, TmsGatewayClient>();
+
+            var configuration = config.Get<TmsGatewayConfiguration>();
+
+            services.AddHttpClient(TmsGatewayClient.HttpClientName, client =>
+            {
+                client.BaseAddress = configuration.BaseAddress;
+            });
+        }
+
+        public static void AddAccessTokenClient(this IServiceCollection services, IConfiguration config)
+        {
+            services.Configure<AccessTokenConfiguration>(config);
+            services.TryAddSingleton<IAccessTokenClient, AccessTokenClient>();
+
+            var configuration = config.Get<AccessTokenConfiguration>();
+
+            services.AddHttpClient(AccessTokenClient.HttpClientName, client =>
+            {
+                client.BaseAddress = configuration.BaseAddress;
+            })
+            .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                return new HttpClientHandler()
+                {
+                    AllowAutoRedirect = false,
+                };
+            });
         }
 
         public static IServiceCollection AddJsonSerializerOptions(this IServiceCollection collection)

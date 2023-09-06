@@ -7,7 +7,6 @@
 
 namespace TmsIntegrationExample.Services.TmsGatewayApi
 {
-    using IdentityModel.Client;
     using System.Threading.Tasks;
     using TmsIntegrationExample.Services.TmsGatewayApi.Model;
 
@@ -15,8 +14,5 @@ namespace TmsIntegrationExample.Services.TmsGatewayApi
     {
         Task<Shipment> PostShipmentAsync(
             ShipmentPost shipment);
-
-        Task<TokenResponse> GetAccessTokenAsync();
-
     }
 }
