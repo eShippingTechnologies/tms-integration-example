@@ -47,9 +47,10 @@ namespace TmsIntegrationExample.Services.AccessToken
             var verifier = Helpers.CreateRandomString(128);
             var challenge = verifier.ToCodeChallenge();
 
+            var discoveryDocumentResponse = await httpClient.GetDiscoveryDocumentAsync();
+
             // Create a relative url for requesting the authorization code
-            // this endpoint is available on https://login.tms.engagedtechnologies.com/.well-known/openid-configuration
-            var url = new RequestUrl("connect/authorize").CreateAuthorizeUrl(
+            var url = new RequestUrl(discoveryDocumentResponse.AuthorizeEndpoint).CreateAuthorizeUrl(
                 responseType: "code",
                 clientId: this.accessTokenConfiguration.ClientId,
                 redirectUri: this.accessTokenConfiguration.RedirectUri,
@@ -63,8 +64,7 @@ namespace TmsIntegrationExample.Services.AccessToken
             var code = System.Web.HttpUtility.ParseQueryString(authorizeResponse.Headers.Location.Query)["code"];
 
             // Request the access token
-            // this endpoint is available on https://login.tms.engagedtechnologies.com/.well-known/openid-configuration
-            var tokenResponse = await new TokenClient(httpClient, new TokenClientOptions { Address = "connect/token", ClientId = this.accessTokenConfiguration.ClientId })
+            var tokenResponse = await new TokenClient(httpClient, new TokenClientOptions { Address = discoveryDocumentResponse.TokenEndpoint, ClientId = this.accessTokenConfiguration.ClientId })
                 .RequestAuthorizationCodeTokenAsync(
                     code,
                     this.accessTokenConfiguration.RedirectUri,
