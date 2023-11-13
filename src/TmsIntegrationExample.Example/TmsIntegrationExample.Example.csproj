@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <UserSecretsId>TmsIntegrationExample</UserSecretsId>
+    <Company>Engaged Technologies</Company>
+    <Copyright>Copyright (c) Engaged Technologies. All rights reserved.</Copyright>
+    <Nullable>disable</Nullable>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TmsIntegrationExample.Services\TmsIntegrationExample.Services.csproj" />
+  </ItemGroup>
+</Project>
